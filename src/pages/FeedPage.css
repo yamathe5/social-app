@@ -1,0 +1,51 @@
+.feed-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #007bff;
+  padding: 1rem;
+  color: white;
+}
+
+.feed-main {
+  display: flex;
+  flex-grow: 1;
+}
+
+.feed-sidebar,
+.feed-friends {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  width: 200px; /* Ajusta según necesidad */
+}
+
+.feed-posts {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto; /* Para el scroll de posts */
+}
+
+.post {
+  background-color: white;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-settings a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+}
+
+.user-settings a:hover {
+  text-decoration: underline;
+}
+
+/* Estilos adicionales para botones y otros elementos como necesites */
