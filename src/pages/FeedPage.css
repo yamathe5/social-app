@@ -1,10 +1,10 @@
-.feed-container {
+.feed {
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
 
-.feed-header {
+.feed__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,38 +13,126 @@
   color: white;
 }
 
-.feed-main {
+.feed__main {
   display: flex;
   flex-grow: 1;
+  background-color: #F8F9FA;
 }
 
-.feed-sidebar,
-.feed-friends {
-  background-color: #f8f9fa;
+.feed__sidebar{
+  background-color: white;
   padding: 1rem;
-  width: 200px; /* Ajusta según necesidad */
+  min-width: 32rem; /* Ajusta según necesidad */
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.feed__button{
+  border-radius: 0.8rem;
+  border: none;
+  text-align: start;
+  color: #343A40;
+  background-color: transparent;
+  /* padding:  1.2rem 0rem; */
+  font-size: 1.8rem;
+  cursor: pointer;
 }
 
-.feed-posts {
+.feed__button:hover{
+  color: #007BFF;
+}
+
+.feed__friends {
+  background-color: white;
+  padding: 1rem;
+  min-width: 32rem; /* Ajusta según necesidad */
+
+}
+.feed__friends h3 {
+ color: #343A40;
+  font-size: 2.2rem;
+}
+.feed__friends ul {
+ list-style: none;
+}
+.feed__friends li {
+  border-radius: 0.8rem;
+  border: none;
+  color: #343A40;
+  background-color: transparent;
+  padding:  1.2rem 0rem;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.feed__friends li:hover{
+  color: #007BFF;
+}
+
+.feed__posts {
   flex-grow: 1;
-  padding: 1rem;
+  margin: 0rem 4rem;
   overflow-y: auto; /* Para el scroll de posts */
+  display: flex;
+  padding-top: 1.6rem;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1.2rem;
+  
+  background-color: white;
 }
 
 .post {
-  background-color: white;
+  /* background-color: white; */
+  width: 90%;
   margin-bottom: 1rem;
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+  border-radius: 0.8rem;
+  background-color: #F8F9FA;
 
-.user-settings a {
+  
+}
+.post__username{
+  font-size: 1.8rem;  
+  color: #343A40;
+  margin-bottom: 1.6rem;
+}
+.post__content{
+  font-size: 1.6rem;
+  color: #343A40;
+  margin-bottom: 0.8rem;
+}
+.post__image{
+  margin-bottom: 0.8rem;
+  width: 100%;
+  /* background-image: contain; */
+}
+.post__buttons{
+  display: flex;
+  gap: 1.2rem;
+  border-top: 0.5px solid #D9D9D9;
+  border-bottom: 0.5px solid #D9D9D9;
+  padding:  0.8rem 0rem;
+}
+.post__button{
+  font-size: 1.6rem;
+  border-radius: 0.8rem;
+  color: #343A40;
+  border: none;
+  padding: 0.8rem  2.2rem;
+  width: 100%;
+  cursor: pointer;
+  background-color: transparent;
+  /* background-color: red; */
+}
+.user__settings a {
   color: white;
   text-decoration: none;
   margin-left: 1rem;
 }
 
-.user-settings a:hover {
+.user__settings a:hover {
   text-decoration: underline;
 }
 
