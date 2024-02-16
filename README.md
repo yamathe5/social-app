@@ -1,8 +1,20 @@
-# React + Vite
+# Pendientes para React + Vite App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Problemas y Mejoras
+- [ ] Resolver problema cuando el token es erróneo y quizá cuando no existe.
+- [ ] Agregar efecto visual para indicar en qué página se encuentra el usuario o cuando se hace hover. Por ejemplo, un borde a la izquierda del ítem de menú correspondiente.
 
-Currently, two official plugins are available:
+## Funcionalidades Importantes
+- [ ] Mostrar el usuario y la fecha de creación en los comentarios.
+- [ ] Permitir escribir un comentario en los posts.
+- [ ] Agregar botón o icono de cerrar en los modales o pop-ups.
+- [ ] Implementar la funcionalidad de dar 'like' a un post.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Implementaciones Pendientes
+- [ ] Implementar la sección "Mis amigos" considerando que amigos será como seguidores.
+- [ ] Implementar la sección "Mis posts".
+- [ ] Implementar la sección "Post guardados".
+
+## Otras Funcionalidades
+- [ ] Implementar la posibilidad de agregar comentarios en otros comentarios (comentarios anidados).
+- [ ] Implementar 'likes' en comentarios.
