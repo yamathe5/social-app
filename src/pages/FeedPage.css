@@ -8,11 +8,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #007bff;
+  background-color: #ffffff;
   padding: 1rem;
   color: white;
+  border-bottom: 1px solid rgb(245, 245, 245);
 }
-
+.feed__logo{
+  width: 4rem;
+  height: 4rem;
+}
+.feed__logo-image{
+  width: 4rem;
+  height: 4rem;
+}
 .feed__main {
   display: flex;
   flex-grow: 1;
@@ -36,8 +44,17 @@
   /* padding:  1.2rem 0rem; */
   font-size: 1.8rem;
   cursor: pointer;
+  display: flex;
+  align-items: center; /* Alinea verticalmente el icono y el texto */
+  gap: 10px; 
+  padding: 0.4rem;
+  margin-bottom: 0.8rem;
 }
 
+.feed__icon {
+  flex-shrink: 0; 
+  width: 20px; 
+}
 .feed__button:hover{
   color: #007BFF;
 }
@@ -137,3 +154,25 @@
 }
 
 /* Estilos adicionales para botones y otros elementos como necesites */
+
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegúrate de que sea superior a cualquier otro elemento */
+}
+
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+}
