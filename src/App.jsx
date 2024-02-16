@@ -11,15 +11,7 @@ import FeedPage from "./pages/FeedPage"; // Asumiendo que tienes un componente F
 import { useAuth } from "./contexts/auth";
 
 function App() {
-  const { auth } = useAuth();
-  console.log(auth);
-
-  if (!auth) {
-    console.log(!auth);
-    console.log({});
-    console.log(!{});
-    console.log("bien");
-  }
+ 
 
   return (
     <Router>
@@ -49,7 +41,7 @@ function App() {
 
 function PublicRoute({ redirectTo, element }) {
   const { auth } = useAuth();
-  return !auth ? element : <Navigate to={redirectTo} replace />;
+  return !auth.user ? element : <Navigate to={redirectTo} replace />;
 }
 
 PublicRoute.propTypes = {
@@ -58,7 +50,8 @@ PublicRoute.propTypes = {
 };
 function ProtectedRoute({ redirectTo, element }) {
   const { auth } = useAuth();
-  return auth ? element : <Navigate to={redirectTo} replace />;
+  // return <Navigate to={redirectTo} replace />;
+  return auth.user ? element : <Navigate to={redirectTo} replace />;
 }
 
 ProtectedRoute.propTypes = {
