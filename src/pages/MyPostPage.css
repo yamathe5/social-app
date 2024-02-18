@@ -1,0 +1,182 @@
+.feed {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.feed__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 1rem;
+  color: white;
+  border-bottom: 1px solid rgb(245, 245, 245);
+}
+.feed__logo{
+  width: 4rem;
+  height: 4rem;
+}
+.feed__logo-image{
+  width: 4rem;
+  height: 4rem;
+}
+.feed__main {
+  display: flex;
+  flex-grow: 1;
+  background-color: #F8F9FA;
+}
+
+.feed__sidebar{
+  background-color: white;
+  padding: 1rem;
+  min-width: 32rem; /* Ajusta según necesidad */
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.feed__button{
+  border-radius: 0.8rem;
+  border: none;
+  text-align: start;
+  color: #343A40;
+  background-color: transparent;
+  /* padding:  1.2rem 0rem; */
+  font-size: 1.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center; /* Alinea verticalmente el icono y el texto */
+  gap: 10px; 
+  padding: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.feed__icon {
+  flex-shrink: 0; 
+  width: 20px; 
+}
+.feed__button:hover{
+  color: #007BFF;
+}
+
+.feed__friends {
+  background-color: white;
+  padding: 1rem;
+  min-width: 32rem; /* Ajusta según necesidad */
+
+}
+.feed__friends h3 {
+ color: #343A40;
+  font-size: 2.2rem;
+}
+.feed__friends ul {
+ list-style: none;
+}
+.feed__friends li {
+  border-radius: 0.8rem;
+  border: none;
+  color: #343A40;
+  background-color: transparent;
+  padding:  1.2rem 0rem;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.feed__friends li:hover{
+  color: #007BFF;
+}
+
+.feed__posts {
+  flex-grow: 1;
+  margin: 0rem 4rem;
+  overflow-y: auto; /* Para el scroll de posts */
+  display: flex;
+  padding-top: 1.6rem;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 1.2rem;
+  
+  background-color: white;
+}
+
+.post {
+  /* background-color: white; */
+  width: 90%;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0.8rem;
+  background-color: #F8F9FA;
+
+  
+}
+.post__username{
+  font-size: 1.8rem;  
+  color: #343A40;
+  margin-bottom: 1.6rem;
+}
+.post__content{
+  font-size: 1.6rem;
+  color: #343A40;
+  margin-bottom: 0.8rem;
+}
+.post__image{
+  margin-bottom: 0.8rem;
+  width: 100%;
+  /* background-image: contain; */
+}
+.post__buttons{
+  display: flex;
+  gap: 1.2rem;
+  border-top: 0.5px solid #D9D9D9;
+  border-bottom: 0.5px solid #D9D9D9;
+  padding:  0.8rem 0rem;
+}
+.post__button{
+  font-size: 1.6rem;
+  border-radius: 0.8rem;
+  color: #343A40;
+  border: none;
+  padding: 0.8rem  2.2rem;
+  width: 100%;
+  cursor: pointer;
+  background-color: transparent;
+  /* background-color: red; */
+}
+
+.post__button--liked{
+  color: #007BFF;
+}
+.user__settings a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+}
+
+.user__settings a:hover {
+  text-decoration: underline;
+}
+
+/* Estilos adicionales para botones y otros elementos como necesites */
+
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegúrate de que sea superior a cualquier otro elemento */
+}
+
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+}
