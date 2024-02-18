@@ -1,5 +1,5 @@
 // AuthContext.js
-import { jwtDecode  as jwt_decode } from 'jwt-decode';
+import { jwtDecode as jwt_decode } from "jwt-decode";
 import { useState, createContext, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
@@ -8,12 +8,10 @@ const AuthContext = createContext(null);
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
-
   const [auth, setAuth] = useState({
     user: null, // Los detalles del usuario
-    token: localStorage.getItem('authToken') || null, // El token JWT
+    token: localStorage.getItem("authToken") || null, // El token JWT
   });
-
 
   const fetchUserProfile = async (_id, token) => {
     try {
@@ -33,11 +31,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
-
   // Simulate a login function
   const login = async (email, password) => {
-    console.log("entra")
     try {
       const response = await fetch(`http://localhost:3000/api/login`, {
         method: "POST",
@@ -47,77 +42,63 @@ export const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
         },
       });
-      console.log("sale")
 
-      console.log(response)
       const data = await response.json();
-      console.log(data)
-      console.log("================")
-      // Asegúrate de que el inicio de sesión fue exitoso antes de actualizar el estado
       if (response.ok) {
         const { _id, token } = data;
         setAuth({ token }); // Solo guardamos el token inicialmente
-        localStorage.setItem('authToken', token); // Guardamos el token en localStorage
+        localStorage.setItem("authToken", token); // Guardamos el token en localStorage
         fetchUserProfile(_id, token); // Obtenemos el perfil del usuario
       } else {
-        console.error(data.message)
+        console.error(data.message);
         // Manejo de errores
       }
     } catch (error) {
       console.error("Error al intentar iniciar sesión:", error);
     }
   };
-  
+
   // Simulate a signup function
-const signup = async (body, type) => {
-  console.log(body, type)
-  try {
-    const response = await fetch(`http://localhost:3000/api/signup`, {
-      method: "POST",
-      mode: "cors",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
+  const signup = async (body) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/signup`, {
+        method: "POST",
+        mode: "cors",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-type": "application/json",
+        },
+      });
 
-    const data = await response.json();
-    console.log(response)
-    // Asegúrate de que el registro fue exitoso antes de actualizar el estado
+      const data = await response.json();
 
-    if (response.ok) {
-      const { _id, token } = data;
-      setAuth({ token }); // Solo guardamos el token inicialmente
-      localStorage.setItem('authToken', token); // Guardamos el token en localStorage
-      fetchUserProfile(_id, token); // Obtenemos el perfil del usuario
-    } else {
-      console.error(data.message);
+      if (response.ok) {
+        const { _id, token } = data;
+        setAuth({ token }); // Solo guardamos el token inicialmente
+        localStorage.setItem("authToken", token); // Guardamos el token en localStorage
+        fetchUserProfile(_id, token); // Obtenemos el perfil del usuario
+      } else {
+        console.error(data.message);
 
-      // Manejo de errores
+        // Manejo de errores
+      }
+    } catch (error) {
+      console.error("Error al intentar registrar:", error);
     }
-    
-  } catch (error) {
-    console.error("Error al intentar registrar:", error);
-  }
-};
-
+  };
 
   // Simulate a logout function
   const logout = () => {
     setAuth({ user: null, token: null });
-    localStorage.removeItem('authToken'); // Eliminamos el token de localStorage
+    localStorage.removeItem("authToken"); // Eliminamos el token de localStorage
   };
 
-
-  // Check if user is logged in when the provider mounts
+  // Check if user is logged in whe n the provider mounts
   useEffect(() => {
-    const storedToken = localStorage.getItem('authToken');
+    const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
       setAuth((prevAuth) => ({ ...prevAuth, token: storedToken }));
-      // Aquí asumimos que el userId está almacenado en el token y lo decodificamos
-      // Esto es común con JWT, pero depende de cómo estés manejando los tokens
       const decoded = jwt_decode(storedToken); // Necesitarías una función para decodificar el JWT
-      console.log(decoded)
       fetchUserProfile(decoded.id, storedToken);
     }
   }, []);
