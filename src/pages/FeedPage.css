@@ -110,6 +110,7 @@
 
   
 }
+
 .post__username{
   font-size: 1.8rem;  
   color: #343A40;
@@ -124,6 +125,7 @@
   margin-bottom: 0.8rem;
   width: 100%;
   /* background-image: contain; */
+  border-radius: 0.8rem;
 }
 .post__buttons{
   display: flex;
@@ -131,6 +133,7 @@
   border-top: 0.5px solid #D9D9D9;
   border-bottom: 0.5px solid #D9D9D9;
   padding:  0.8rem 0rem;
+  margin-bottom: 1.6rem;
 }
 .post__button{
   font-size: 1.6rem;
@@ -142,6 +145,10 @@
   cursor: pointer;
   background-color: transparent;
   /* background-color: red; */
+}
+
+.post__button--liked{
+  color: #007BFF;
 }
 .user__settings a {
   color: white;
@@ -175,4 +182,102 @@
   border-radius: 8px;
   max-width: 500px;
   width: 100%;
+}
+.comment{
+  border: 0.5px solid rgb(236, 236, 236);
+  border-radius: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+.modal_post {
+  overflow-x: hidden; /* Oculta el desplazamiento horizontal */
+  overflow-y: auto; /* Habilita el desplazamiento vertical automáticamente cuando sea necesario */
+  max-height: 68rem; /* Ajusta esto según la altura máxima deseada */
+}
+/* Firefox */
+.modal_post {
+  scrollbar-width: thin; /* "auto", "thin", "none" */
+  scrollbar-color: #888 #f1f1f1; /* color del control deslizante y color de la pista */
+}
+/* Estiliza la barra de desplazamiento para navegadores WebKit */
+.modal_post::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento */
+}
+
+.modal_post::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color de fondo de la pista de desplazamiento */
+  border-radius: 10px; /* Bordes redondeados para la pista */
+}
+
+.modal_post::-webkit-scrollbar-thumb {
+  background: #888; /* Color de fondo del control deslizante de desplazamiento */
+  border-radius: 10px; /* Bordes redondeados para el control deslizante */
+}
+
+.modal_post::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color de fondo del control deslizante al pasar el mouse */
+}
+.modal_post{
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0.8rem;
+  background-color: #F8F9FA;
+}
+.comment__username{
+  font-size: 1.4rem;
+}
+.comment__content{
+  font-size: 1.6rem;
+
+}
+.comment__date{
+font-size: 1.2rem;
+}
+.input__box{
+  width: 100%;
+}
+.input__box__comment {
+  width: 100%;
+  border: none;
+  border-radius: 0.8rem;
+  padding: 2rem 0.4rem;
+  background-color: #f0f0f0; /* Color de fondo ligero para el input */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil para profundidad */
+  font-size: 1rem; /* Tamaño de fuente adecuado */
+  color: #333; /* Color de texto oscuro para contraste */
+  font-size: 1.6rem;
+  margin-bottom: 0.8rem;
+
+}
+
+.input__box__comment:focus {
+  outline: none; /* Elimina el borde/outline al hacer clic */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al enfocar */
+}
+.input__box__send-button {
+  padding: 0.8rem 2rem; /* Espaciado interno generoso */
+  background-color: #007BFF; /* Tu color principal azul */
+  color: white; /* Contraste alto con el texto blanco */
+  border: none; /* Sin bordes */
+  border-radius: 0.8rem; /* Bordes redondeados para un aspecto suave */
+  font-size: 1rem; /* Tamaño de fuente legible */
+  cursor: pointer; /* Cursor en forma de mano para indicar interactividad */
+  transition: background-color 0.3s, transform 0.2s; /* Transiciones suaves */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra sutil para efecto de profundidad */
+}
+
+.input__box__send-button:hover {
+  background-color: #0069d9; /* Un tono ligeramente más oscuro para el estado hover */
+  transform: scale(1.05); /* Efecto de "crecimiento" ligeramente al pasar el mouse */
+}
+
+.input__box__send-button:active {
+  background-color: #005cbf; /* Un tono aún más oscuro para el estado active */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Sombra más sutil para imitar el efecto de presión */
+  transform: scale(0.98); /* Efecto de "presión" al hacer clic */
+}
+
+.input__box__send-button:focus {
+  outline: none; /* Elimina el contorno al enfocar */
 }

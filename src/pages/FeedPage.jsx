@@ -1,35 +1,73 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PropTypes from 'prop-types'; // Importa PropTypes
+import { formatDistanceToNow } from "date-fns";
+import { es } from "date-fns/locale"; // Importa el locale que necesites, en este caso español
+
+import PropTypes from "prop-types"; // Importa PropTypes
 import { useState } from "react";
 import "./FeedPage.css"; // Asegúrate de tener este archivo CSS en tu proyecto
 import { useEffect } from "react";
 import Logo from "../assets/logo.jpg";
-import {
-  faPenToSquare,
-  faBookmark,
-  faUserFriends,
-  faCog,
-  faSignOutAlt,
-  faHouse,
-} from "@fortawesome/free-solid-svg-icons"; // Importa los iconos específicos
+import { useAuth } from "../contexts/auth";
+import Sidebar from "../components/Sidebar";
+
 export default function FeedPage() {
   const [data, setData] = useState(null);
+  const [inputValue, setInputValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-
+  const { auth } = useAuth();
   useEffect(() => {
-    fetch("http://localhost:3000/api/posts")
+    fetch("http://localhost:3000/api/posts", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${auth.token}`, // Incluye el token aquí
+      },
+    })
       .then((resp) => resp.json())
-      .then((resp) => setData(resp))
+      .then((resp) => {
+        setData(resp);
+      })
       .catch((error) => console.error("Error al cargar los posts:", error));
-  }, []);
+  }, [auth.token]);
 
   const openModal = (post) => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
+    fetch(`http://localhost:3000/api/posts/${post._id}`)
+      .then((res) => res.json())
+      .then((res) => {
+        setSelectedPost(res);
+        setIsModalOpen(true);
+      });
   };
 
+  function toogleLike(type, postId) {
 
+    fetch(`http://localhost:3000/api/posts/${postId}/${type}`, {
+      method: "PATCH",
+      mode: "cors",
+      body: JSON.stringify({
+        userId: auth.user._id,
+      }),
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then(() => {
+        const updatedPosts = data.map((post) => {
+          if (post._id === postId) {
+            return {
+              ...post,
+              likes: !post.hasLiked
+                ? [...post.likes, auth.user._id]
+                : post.likes.filter((id) => id !== auth.user._id),
+              hasLiked: !post.hasLiked,
+            }; // Asume que el servidor devuelve el post actualizado
+          }
+          return post;
+        });
+        setData(updatedPosts); // Actualiza el estado con los posts actualizados
+      });
+  }
 
   return (
     <div className="feed">
@@ -48,32 +86,18 @@ export default function FeedPage() {
         </nav>
       </header>
       <main className="feed__main">
-        <aside className="feed__sidebar">
-          <button className="feed__button">
-            <FontAwesomeIcon className="feed__icon" icon={faHouse} /> Feed
-          </button>
-          <button className="feed__button">
-            <FontAwesomeIcon className="feed__icon" icon={faPenToSquare} /> Mis
-            posts
-          </button>
-          <button className="feed__button">
-            <FontAwesomeIcon className="feed__icon" icon={faBookmark} /> Post
-            guardados
-          </button>
-          <button className="feed__button">
-            <FontAwesomeIcon className="feed__icon" icon={faUserFriends} /> Mis
-            contactos
-          </button>
-          <button className="feed__button">
-            <FontAwesomeIcon className="feed__icon" icon={faCog} /> Settings
-          </button>
-          <button className="feed__button">
-            <FontAwesomeIcon className="feed__icon" icon={faSignOutAlt} /> Salir
-          </button>
-        </aside>
+      
+        <Sidebar></Sidebar>
         <section className="feed__posts">
           {isModalOpen && (
-            <Modal post={selectedPost} onClose={() => setIsModalOpen(false)} />
+            <Modal
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              post={selectedPost}
+              auth={auth}
+              setSelectedPost={setSelectedPost}
+              onClose={() => setIsModalOpen(false)}
+            />
           )}
 
           {data &&
@@ -84,7 +108,21 @@ export default function FeedPage() {
                 <img className="post__image" src={item.image} alt="" />
                 <p>Comments {item.comments.length}</p>
                 <div className="post__buttons">
-                  <button className="post__button">Me gusta</button>
+                  {item.hasLiked ? (
+                    <button
+                      className="post__button post__button--liked"
+                      onClick={() => toogleLike("unlike", item._id)}
+                    >
+                      Me gusta
+                    </button>
+                  ) : (
+                    <button
+                      className="post__button"
+                      onClick={() => toogleLike("like", item._id)}
+                    >
+                      Me gusta
+                    </button>
+                  )}
                   <button
                     className="post__button"
                     onClick={() => openModal(item)}
@@ -107,39 +145,91 @@ export default function FeedPage() {
   );
 }
 
-const Modal = ({ post, onClose }) => {
+const Modal = ({
+  post,
+  onClose,
+  auth,
+  setSelectedPost,
+  inputValue,
+  setInputValue,
+}) => {
   if (!post) return null;
 
-  const [inputValue, setInputValue] = useState("")
+  function handleChangeInput(e) {
+    setInputValue(e.target.value);
+  }
 
-  function  handleChangeInput(e){
-    console.log(e.target.value)
-    setInputValue(e.target.value)
+  function onSubmit() {
+    fetch(`http://localhost:3000/api/posts/${post._id}/comments`, {
+      method: "POST",
+      mode: "cors",
+      body: JSON.stringify({
+        text: inputValue,
+        userId: auth.user._id,
+      }),
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((newComment) => {
+        // Actualiza el estado para incluir el nuevo comentario
+        // Asume que newComment es el comentario recién creado, devuelto por el servidor
+        setSelectedPost((prevPost) => ({
+          ...prevPost,
+          comments: [...prevPost.comments, newComment],
+        }));
+        setInputValue(""); // Limpia el campo de entrada
+      })
+      .catch((error) =>
+        console.error("Error al agregar el comentario:", error)
+      );
   }
   return (
     <div className="modal-backdrop">
       <div className="modal">
-        <article className="post">
+        <article className="modal_post">
           <h2 className="post__username">{post.user.username}</h2>
           <p className="post__content">{post.content}</p>
-          {post.image && <img className="post__image" src={post.image} alt="Post" />}
+          {post.image && (
+            <img className="post__image" src={post.image} alt="Post" />
+          )}
           <p>Comments {post.comments ? post.comments.length : 0}</p>
-          {post.comments && post.comments.map((comment, index) => (
-            <div key={index} className="comment">
-              <strong>{comment.user}: </strong>
-              <span>{comment.text}</span>
-            </div>
-          ))}
+          <div className="comments__container">
+          {post.comments &&
+            post.comments.map((comment, index) => (
+              <div key={index} className="comment">
+                <strong className="comment__username" >{comment.user.username}: </strong>
+                <br />
+                <span className="comment__content">{comment.text}</span>
+                <br />
+                <span className="comment__date">
+                  {formatDistanceToNow(new Date(comment.createdAt), {
+                    addSuffix: true,
+                    locale: es,
+                  })}
+                </span>
+              </div>
+            ))}
 
+          </div>
+          
           <div className="post__buttons">
             <button className="post__button">Me gusta</button>
-            <button className="post__button" onClick={onClose}>Cerrar</button>
+            <button className="post__button" onClick={onClose}>
+              Cerrar
+            </button>
           </div>
 
-          <div>
-            <p>Escribe un comentario</p>
-            <input type="text" value={inputValue} placeholder="Escribe un comentario" onChange={(e) => handleChangeInput(e)} />
-            <button>Envia</button>
+          <div className="input__box" >
+            <input
+            className="input__box__comment"
+              type="text"
+              value={inputValue}
+              placeholder="Escribe un comentario"
+              onChange={(e) => handleChangeInput(e)}
+            />
+            <button className="input__box__send-button" onClick={() => onSubmit()}>Envia</button>
           </div>
         </article>
       </div>
@@ -148,15 +238,38 @@ const Modal = ({ post, onClose }) => {
 };
 Modal.propTypes = {
   post: PropTypes.shape({
-    user: PropTypes.shape({
-      username: PropTypes.string.isRequired,
-    }).isRequired,
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     image: PropTypes.string,
-    comments: PropTypes.arrayOf(PropTypes.shape({
-      user: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-    })),
+    user: PropTypes.shape({
+      username: PropTypes.string.isRequired, // Asume que user es un objeto con un campo username
+      // Puedes añadir más campos del usuario aquí si es necesario
+    }).isRequired,
+    likes: PropTypes.arrayOf(PropTypes.string),
+    comments: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        text: PropTypes.string.isRequired,
+        user: PropTypes.shape({
+          username: PropTypes.string.isRequired,
+          // Incluye otros campos del modelo de usuario si son necesarios aquí
+        }).isRequired,
+        // Añade aquí más campos según tu modelo
+      })
+    ),
+    createdAt: PropTypes.string.isRequired,
+    updatedAt: PropTypes.string.isRequired,
   }),
-  onClose: PropTypes.func.isRequired, // Indica que onClose es una función requerida
+  auth: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      // Incluye otros campos del modelo de usuario si son necesarios aquí
+    }),
+  }),
+  onClose: PropTypes.func.isRequired,
+  setSelectedPost: PropTypes.func.isRequired, // Añade esta línea
+  inputValue: PropTypes.string.isRequired,
+  setInputValue: PropTypes.func.isRequired,
 };
