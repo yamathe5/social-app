@@ -9,6 +9,8 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import FeedPage from "./pages/FeedPage"; // Asumiendo que tienes un componente FeedPage para el feed de tu red social
 import { useAuth } from "./contexts/auth";
+import MyPostPage from "./pages/MyPostsPage";
+import ContactsPage from "./pages/ContactsPage";
 
 function App() {
  
@@ -25,13 +27,26 @@ function App() {
           element={<PublicRoute redirectTo="/feed" element={<SignupPage />} />}
         />
         <Route
+          path="/my-posts"
+          element={
+            <ProtectedRoute redirectTo="/login" element={<MyPostPage />} />
+          }
+        />
+        <Route
           path="/feed"
           element={
             <ProtectedRoute redirectTo="/login" element={<FeedPage />} />
           }
         />
-        <Route path="/" element={<Navigate to="/feed" replace />} />
-        <Route path="*" element={<Navigate to="/feed" replace />} />
+        <Route
+          path="/contacts"
+          element={
+            <ProtectedRoute redirectTo="/login" element={<ContactsPage />} />
+          }
+        />
+        
+        {/* <Route path="/" element={<Navigate to="/feed" replace />} /> */}
+        <Route path="*" element={<div>No encontrada</div>} />
 
       </Routes>
     </Router>
@@ -41,7 +56,8 @@ function App() {
 
 function PublicRoute({ redirectTo, element }) {
   const { auth } = useAuth();
-  return !auth.user ? element : <Navigate to={redirectTo} replace />;
+
+  return !auth.token ? element : <Navigate to={redirectTo} replace />;
 }
 
 PublicRoute.propTypes = {
@@ -51,7 +67,7 @@ PublicRoute.propTypes = {
 function ProtectedRoute({ redirectTo, element }) {
   const { auth } = useAuth();
   // return <Navigate to={redirectTo} replace />;
-  return auth.user ? element : <Navigate to={redirectTo} replace />;
+  return auth.token ? element : <Navigate to={redirectTo} replace />;
 }
 
 ProtectedRoute.propTypes = {
