@@ -13,21 +13,21 @@
   color: white;
   border-bottom: 1px solid rgb(245, 245, 245);
 }
-.feed__logo{
+.feed__logo {
   width: 4rem;
   height: 4rem;
 }
-.feed__logo-image{
+.feed__logo-image {
   width: 4rem;
   height: 4rem;
 }
 .feed__main {
   display: flex;
   flex-grow: 1;
-  background-color: #F8F9FA;
+  background-color: #f8f9fa;
 }
 
-.feed__sidebar{
+.feed__sidebar {
   background-color: white;
   padding: 1rem;
   min-width: 32rem; /* Ajusta según necesidad */
@@ -35,55 +35,54 @@
   flex-direction: column;
   gap: 0.8rem;
 }
-.feed__button{
+.feed__button {
   border-radius: 0.8rem;
   border: none;
   text-align: start;
-  color: #343A40;
+  color: #343a40;
   background-color: transparent;
   /* padding:  1.2rem 0rem; */
   font-size: 1.8rem;
   cursor: pointer;
   display: flex;
   align-items: center; /* Alinea verticalmente el icono y el texto */
-  gap: 10px; 
+  gap: 10px;
   padding: 0.4rem;
   margin-bottom: 0.8rem;
 }
 
 .feed__icon {
-  flex-shrink: 0; 
-  width: 20px; 
+  flex-shrink: 0;
+  width: 20px;
 }
-.feed__button:hover{
-  color: #007BFF;
+.feed__button:hover {
+  color: #007bff;
 }
 
 .feed__friends {
   background-color: white;
   padding: 1rem;
   min-width: 32rem; /* Ajusta según necesidad */
-
 }
 .feed__friends h3 {
- color: #343A40;
+  color: #343a40;
   font-size: 2.2rem;
 }
 .feed__friends ul {
- list-style: none;
+  list-style: none;
 }
 .feed__friends li {
   border-radius: 0.8rem;
   border: none;
-  color: #343A40;
+  color: #343a40;
   background-color: transparent;
-  padding:  1.2rem 0rem;
+  padding: 1.2rem 0rem;
   font-size: 1.8rem;
   cursor: pointer;
 }
 
-.feed__friends li:hover{
-  color: #007BFF;
+.feed__friends li:hover {
+  color: #007bff;
 }
 
 .feed__posts {
@@ -95,7 +94,7 @@
   flex-direction: column;
   align-items: center;
   border-radius: 1.2rem;
-  
+
   background-color: white;
 }
 
@@ -106,49 +105,52 @@
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 0.8rem;
-  background-color: #F8F9FA;
-
-  
+  background-color: #f8f9fa;
 }
 
-.post__username{
-  font-size: 1.8rem;  
-  color: #343A40;
-  margin-bottom: 1.6rem;
+.post__username {
+  font-size: 1.8rem;
+  color: #343a40;
+  /* margin-bottom: 1.6rem; */
 }
-.post__content{
+.post__content {
   font-size: 1.6rem;
-  color: #343A40;
+  color: #343a40;
   margin-bottom: 0.8rem;
 }
-.post__image{
+.post__image {
   margin-bottom: 0.8rem;
   width: 100%;
-  /* background-image: contain; */
   border-radius: 0.8rem;
 }
-.post__buttons{
+.post__stadistics {
+  margin-bottom: 0.8rem;
+}
+.post__comment-quantity {
+  font-size: 1.4rem;
+}
+.post__buttons {
   display: flex;
   gap: 1.2rem;
-  border-top: 0.5px solid #D9D9D9;
-  border-bottom: 0.5px solid #D9D9D9;
-  padding:  0.8rem 0rem;
+  border-top: 0.5px solid #d9d9d9;
+  border-bottom: 0.5px solid #d9d9d9;
+  padding: 0.8rem 0rem;
   margin-bottom: 1.6rem;
 }
-.post__button{
+.post__button {
   font-size: 1.6rem;
   border-radius: 0.8rem;
-  color: #343A40;
+  color: #343a40;
   border: none;
-  padding: 0.8rem  2.2rem;
+  padding: 0.8rem 2.2rem;
   width: 100%;
   cursor: pointer;
   background-color: transparent;
   /* background-color: red; */
 }
 
-.post__button--liked{
-  color: #007BFF;
+.post__button--liked {
+  color: #007bff;
 }
 .user__settings a {
   color: white;
@@ -161,7 +163,6 @@
 }
 
 /* Estilos adicionales para botones y otros elementos como necesites */
-
 
 .modal-backdrop {
   position: fixed;
@@ -180,10 +181,10 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  max-width: 500px;
+  max-width: 52rem;
   width: 100%;
 }
-.comment{
+.comment {
   border: 0.5px solid rgb(236, 236, 236);
   border-radius: 0.8rem;
   margin-bottom: 0.8rem;
@@ -216,25 +217,24 @@
 .modal_post::-webkit-scrollbar-thumb:hover {
   background: #555; /* Color de fondo del control deslizante al pasar el mouse */
 }
-.modal_post{
+.modal_post {
   width: 100%;
   margin-bottom: 1rem;
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 0.8rem;
-  background-color: #F8F9FA;
+  background-color: #f8f9fa;
 }
-.comment__username{
+.comment__username {
   font-size: 1.4rem;
 }
-.comment__content{
+.comment__content {
   font-size: 1.6rem;
-
 }
-.comment__date{
-font-size: 1.2rem;
+.comment__date {
+  font-size: 1.2rem;
 }
-.input__box{
+.input__box {
   width: 100%;
 }
 .input__box__comment {
@@ -248,7 +248,6 @@ font-size: 1.2rem;
   color: #333; /* Color de texto oscuro para contraste */
   font-size: 1.6rem;
   margin-bottom: 0.8rem;
-
 }
 
 .input__box__comment:focus {
@@ -257,7 +256,7 @@ font-size: 1.2rem;
 }
 .input__box__send-button {
   padding: 0.8rem 2rem; /* Espaciado interno generoso */
-  background-color: #007BFF; /* Tu color principal azul */
+  background-color: #007bff; /* Tu color principal azul */
   color: white; /* Contraste alto con el texto blanco */
   border: none; /* Sin bordes */
   border-radius: 0.8rem; /* Bordes redondeados para un aspecto suave */
@@ -269,7 +268,9 @@ font-size: 1.2rem;
 
 .input__box__send-button:hover {
   background-color: #0069d9; /* Un tono ligeramente más oscuro para el estado hover */
-  transform: scale(1.05); /* Efecto de "crecimiento" ligeramente al pasar el mouse */
+  transform: scale(
+    1.05
+  ); /* Efecto de "crecimiento" ligeramente al pasar el mouse */
 }
 
 .input__box__send-button:active {
@@ -281,3 +282,67 @@ font-size: 1.2rem;
 .input__box__send-button:focus {
   outline: none; /* Elimina el contorno al enfocar */
 }
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.modal-close-icon {
+  cursor: pointer;
+  color: #343a40; /* Ajusta el color según tu diseño */
+  font-size: 24px; /* Ajusta el tamaño según necesites */
+}
+.no-scroll {
+  overflow: hidden;
+}
+
+
+/* form */
+
+/* Formulario de Nuevo Post */
+.new-post-form {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.new-post-form__title,
+.new-post-form__content,
+.new-post-form__image {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.new-post-form__title:focus,
+.new-post-form__content:focus,
+.new-post-form__image:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.new-post-form__content {
+  min-height: 100px; /* Ajusta según necesidad */
+}
+
+.new-post-form__submit {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.new-post-form__submit:hover {
+  background-color: #0056b3;
+}
+
