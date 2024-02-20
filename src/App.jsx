@@ -7,7 +7,7 @@ import {
 import PropTypes from "prop-types";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import FeedPage from "./pages/FeedPage"; // Asumiendo que tienes un componente FeedPage para el feed de tu red social
+import FeedPage from "./pages/FeedPage"; 
 import { useAuth } from "./contexts/auth";
 import MyPostPage from "./pages/MyPostsPage";
 import ContactsPage from "./pages/ContactsPage";
@@ -66,7 +66,6 @@ PublicRoute.propTypes = {
 };
 function ProtectedRoute({ redirectTo, element }) {
   const { auth } = useAuth();
-  // return <Navigate to={redirectTo} replace />;
   return auth.token ? element : <Navigate to={redirectTo} replace />;
 }
 

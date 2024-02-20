@@ -15,15 +15,15 @@ const Sidebar = () => {
         <button className="feed__button" onClick={() => navigate('/my-posts')}>
           <FontAwesomeIcon className="feed__icon" icon={faPenToSquare} /> Mis posts
         </button>
-        <button className="feed__button" onClick={() => navigate('/saved-posts')}>
+        {/* <button className="feed__button" onClick={() => navigate('/saved-posts')}>
           <FontAwesomeIcon className="feed__icon" icon={faBookmark} /> Post guardados
-        </button>
+        </button> */}
         <button className="feed__button" onClick={() => navigate('/contacts')}>
           <FontAwesomeIcon className="feed__icon" icon={faUserFriends} /> Mis contactos
         </button>
-        <button className="feed__button" onClick={() => navigate('/settings')}>
+        {/* <button className="feed__button" onClick={() => navigate('/settings')}>
           <FontAwesomeIcon className="feed__icon" icon={faCog} /> Configuraciones
-        </button>
+        </button> */}
         <button className="feed__button" onClick={() => {
           logout( )
           navigate('/login');
