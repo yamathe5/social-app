@@ -1,38 +1,74 @@
-import "./SignupPage.css"; // Asegúrate de tener este archivo CSS en tu proyecto
+import { useState } from "react";
+import "./SignupPage.css"; // Asegúrate de tener un archivo CSS para estilos
+import { useAuth } from "../contexts/auth";
+import { Link } from "react-router-dom";
 
 export default function SignupPage() {
-  // Función para manejar el registro (a implementar)
-  const handleSignUp = (e) => {
+  const [inputs, setInputs] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const { signup } = useAuth();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputs((inputs) => ({ ...inputs, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí iría la lógica para manejar el registro
-    console.log("Registro de usuario");
+    signup(inputs)
+      .then(() => {
+        console.log("Registro exitoso");
+      })
+      .catch((error) => {
+        console.error("Error en el registro", error);
+      });
   };
 
   return (
     <div className="signup-container">
-      <form className="signup-form" onSubmit={handleSignUp}>
-        <h2 className="signup-title">Regístrate en social app</h2>
+      <form className="signup-form" onSubmit={handleSubmit}>
+        <h2 className="signup-title">Registro</h2>
         <div className="input-container">
-          <label htmlFor="username">Nombre de usuario</label>
-          <input type="text" id="username" required />
+          <label htmlFor="username">Usuario</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={inputs.username}
+            onChange={handleInputChange}
+            required
+          />
         </div>
         <div className="input-container">
-          <label htmlFor="email">Correo electrónico</label>
-          <input type="email" id="email" required />
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={inputs.email}
+            onChange={handleInputChange}
+            required
+          />
         </div>
         <div className="input-container">
           <label htmlFor="password">Contraseña</label>
-          <input type="password" id="password" required />
-        </div>
-        <div className="input-container">
-          <label htmlFor="confirm-password">Confirmar contraseña</label>
-          <input type="password" id="confirm-password" required />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={inputs.password}
+            onChange={handleInputChange}
+            required
+          />
         </div>
         <button type="submit" className="signup-button">
           Registrarse
         </button>
         <div className="signup-links">
-          <a href="/login">¿Ya tienes una cuenta? Inicia sesión</a>
+          <Link to="/login">¿Ya tienes cuenta? Inicia sesión</Link>
         </div>
       </form>
     </div>
