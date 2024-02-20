@@ -1,23 +1,22 @@
 import { useState } from "react";
-import "./LoginPage.css"; // Asegúrate de crear un archivo CSS para estilizar tu página de inicio de sesión
+import "./LoginPage.css";
 import { useAuth } from "../contexts/auth";
+import { Link } from "react-router-dom";
 
 export default function LoginPage() {
-  const [inputs, setInput] = useState({mail:"", password:""})
-  const {login} = useAuth()
+  const [inputs, setInput] = useState({ mail: "", password: "" });
+  const { login } = useAuth();
 
-  function handleSetInputs(e, type){
+  function handleSetInputs(e, type) {
     setInput((prevInput) => ({
       ...prevInput,
-      [type]: e.target.value
+      [type]: e.target.value,
     }));
   }
 
-  // Función para manejar el inicio de sesión (a implementar)
   const handleLogin = (e) => {
     e.preventDefault();
-    login(inputs.mail, inputs.password)
-    // Aquí iría la lógica para manejar el inicio de sesión
+    login(inputs.mail, inputs.password);
     console.log("Inicio de sesión");
   };
 
@@ -27,18 +26,30 @@ export default function LoginPage() {
         <h2 className="login-title">social app</h2>
         <div className="input-container">
           <label htmlFor="email">Mail</label>
-          <input type="email" id="email" value={inputs.mail} onChange={e =>handleSetInputs(e, "mail")} required />
+          <input
+            type="email"
+            id="email"
+            value={inputs.mail}
+            onChange={(e) => handleSetInputs(e, "mail")}
+            required
+          />
         </div>
         <div className="input-container">
           <label htmlFor="password">Contraseña</label>
-          <input type="password" id="password" value={inputs.password} onChange={e =>handleSetInputs(e, "password")} required />
+          <input
+            type="password"
+            id="password"
+            value={inputs.password}
+            onChange={(e) => handleSetInputs(e, "password")}
+            required
+          />
         </div>
         <button type="submit" className="login-button">
           Iniciar sesión
         </button>
         <div className="login-links">
-          <a href="/register">No tienes una cuenta? Regístrate</a>
-          <a href="/forgot-password">Olvidaste tu contraseña?</a>
+          <Link to="/signup">No tienes una cuenta? Regístrate</Link>
+          <Link to="/forgot-password">Olvidaste tu contraseña?</Link>
         </div>
       </form>
     </div>
