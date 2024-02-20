@@ -1,16 +1,13 @@
-// AuthContext.js
 import { jwtDecode as jwt_decode } from "jwt-decode";
 import { useState, createContext, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
-// Create a context for auth
 const AuthContext = createContext(null);
 
-// Create a provider component
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
-    user: null, // Los detalles del usuario
-    token: localStorage.getItem("authToken") || null, // El token JWT
+    user: null,
+    token: localStorage.getItem("authToken") || null,
   });
 
   const fetchUserProfile = async (_id, token) => {
@@ -31,7 +28,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Simulate a login function
   const login = async (email, password) => {
     try {
       const response = await fetch(`http://localhost:3000/api/login`, {
@@ -46,19 +42,17 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       if (response.ok) {
         const { _id, token } = data;
-        setAuth({ token }); // Solo guardamos el token inicialmente
-        localStorage.setItem("authToken", token); // Guardamos el token en localStorage
-        fetchUserProfile(_id, token); // Obtenemos el perfil del usuario
+        setAuth({ token });
+        localStorage.setItem("authToken", token);
+        fetchUserProfile(_id, token);
       } else {
         console.error(data.message);
-        // Manejo de errores
       }
     } catch (error) {
       console.error("Error al intentar iniciar sesión:", error);
     }
   };
 
-  // Simulate a signup function
   const signup = async (body) => {
     try {
       const response = await fetch(`http://localhost:3000/api/signup`, {
@@ -73,39 +67,33 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
 
       if (response.ok) {
-        const { _id, token } = data;
-        setAuth({ token }); // Solo guardamos el token inicialmente
-        localStorage.setItem("authToken", token); // Guardamos el token en localStorage
-        fetchUserProfile(_id, token); // Obtenemos el perfil del usuario
+        const _id = data.user.id;
+        const token = data.user.token;
+        setAuth({ user: data.user, token });
+        localStorage.setItem("authToken", token);
+        fetchUserProfile(_id, token);
       } else {
         console.error(data.message);
-
-        // Manejo de errores
       }
     } catch (error) {
       console.error("Error al intentar registrar:", error);
     }
   };
 
-  // Simulate a logout function
   const logout = () => {
     setAuth({ user: null, token: null });
-    localStorage.removeItem("authToken"); // Eliminamos el token de localStorage
+    localStorage.removeItem("authToken");
   };
 
-  // Check if user is logged in whe n the provider mounts
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
       setAuth((prevAuth) => ({ ...prevAuth, token: storedToken }));
-      const decoded = jwt_decode(storedToken); // Necesitarías una función para decodificar el JWT
+      const decoded = jwt_decode(storedToken);
       fetchUserProfile(decoded.id, storedToken);
     }
   }, []);
 
-  // Store the user in localStorage when it changes
-
-  // The context value that will be supplied to any descendants of this component.
   const value = {
     auth,
     login,
@@ -116,11 +104,10 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Create a custom hook to use the auth context
 export const useAuth = () => {
   return useContext(AuthContext);
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired, // children debe ser un nodo React
+  children: PropTypes.node.isRequired,
 };
