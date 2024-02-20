@@ -1,10 +1,11 @@
-import "./FeedPage.css"; // Asegúrate de tener este archivo CSS en tu proyecto
+import "./FeedPage.css";
 import { useEffect, useState } from "react";
 import Logo from "../assets/logo.jpg";
 
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../contexts/auth";
 import { jwtDecode as jwt_decode } from "jwt-decode";
+import FriendsSidebar from "../components/FriendsSidebar";
 
 export default function ContactsPage() {
   const [followers,  setFollowers] = useState(null);
@@ -13,15 +14,14 @@ export default function ContactsPage() {
   const { auth } = useAuth();
 
   useEffect(() => {
-    const decoded = jwt_decode(auth.token); // Necesitarías una función para decodificar el JWT
-    console.log(decoded);
+    const decoded = jwt_decode(auth.token); 
 
     fetch(`http://localhost:3000/api/${decoded.id}/followers`)
       .then((data) => data.json())
-      .then((data) => {setFollowers(data); console.log(data)});
+      .then((data) => {setFollowers(data); });
     fetch(`http://localhost:3000/api/${decoded.id}/following`)
       .then((data) => data.json())
-      .then((data) => {setFollowgins(data); console.log(data)});
+      .then((data) => {setFollowgins(data); });
   }, [auth.token]);
 
   return (
@@ -66,13 +66,7 @@ export default function ContactsPage() {
               );
             })}
         </section>
-        <aside className="feed__friends">
-          <h3 className="feed__friends-title">Friends</h3>
-          <ul className="feed__friends-list">
-            <li className="feed__friends-item">Camilo Rodríguez</li>
-            {/* Repite el elemento de lista para más amigos */}
-          </ul>
-        </aside>
+        <FriendsSidebar></FriendsSidebar>
       </main>
     </div>
   );
