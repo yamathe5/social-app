@@ -13,7 +13,8 @@ import MyPostPage from "./pages/MyPostsPage";
 import ContactsPage from "./pages/ContactsPage";
 
 function App() {
- 
+  const { auth } = useAuth();
+
 
   return (
     <Router>
@@ -46,7 +47,8 @@ function App() {
         />
         
         {/* <Route path="/" element={<Navigate to="/feed" replace />} /> */}
-        <Route path="*" element={<div>No encontrada</div>} />
+        <Route path="/" element={<Navigate to={auth.token ? "/feed" : "/login"} replace />} />
+        <Route path="*" element={<Navigate to={auth.token ? "/feed" : "/login"} replace />} />
 
       </Routes>
     </Router>
