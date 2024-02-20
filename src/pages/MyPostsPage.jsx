@@ -20,9 +20,11 @@ export default function MyPostPage() {
   const { auth } = useAuth();
   const [inputValue, setInputValue] = useState("");
 
+  
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const decoded = jwt_decode(auth.token);
-    fetch(`http://localhost:3000/api/user/${decoded.id}/posts`, {
+    fetch(`${apiUrl}/api/user/${decoded.id}/posts`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -34,11 +36,11 @@ export default function MyPostPage() {
         setData(resp);
       })
       .catch((error) => console.error("Error al cargar los posts:", error));
-  }, [auth.token]);
+  }, [apiUrl, auth.token]);
 
   function toogleLike(type, postId) {
 
-    fetch(`http://localhost:3000/api/posts/${postId}/${type}`, {
+    fetch(`${apiUrl}/api/posts/${postId}/${type}`, {
       method: "PATCH",
       mode: "cors",
       body: JSON.stringify({
@@ -101,6 +103,7 @@ export default function MyPostPage() {
         <section className="feed__posts">
           {isModalOpen && (
             <Modal
+            apiUrl={apiUrl}
               data={data}
               setData={setData}
               toogleLike={toogleLike}
@@ -161,6 +164,7 @@ export default function MyPostPage() {
 }
 
 const Modal = ({
+  apiUrl,
   setData,
   data,
   post,
@@ -180,7 +184,7 @@ const Modal = ({
   function onSubmit() {
     if (inputValue.length === 0) return;
 
-    fetch(`http://localhost:3000/api/posts/${post._id}/comments`, {
+    fetch(`${apiUrl}/api/posts/${post._id}/comments`, {
       method: "POST",
       mode: "cors",
       body: JSON.stringify({
@@ -354,7 +358,7 @@ Modal.propTypes = {
     })
   ).isRequired,
   setData: PropTypes.func.isRequired,
-
+  apiUrl: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   setSelectedPost: PropTypes.func.isRequired,
   inputValue: PropTypes.string.isRequired,

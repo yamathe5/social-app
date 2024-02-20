@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const [auth, setAuth] = useState({
     user: null,
     token: localStorage.getItem("authToken") || null,
@@ -12,7 +14,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserProfile = async (_id, token) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/user/${_id}`, {
+      const response = await fetch(`${apiUrl}/api/user/${_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -30,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/login`, {
+      const response = await fetch(`${apiUrl}/api/login`, {
         method: "POST",
         mode: "cors",
         body: JSON.stringify({ email: email, password: password }),
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (body) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/signup`, {
+      const response = await fetch(`${apiUrl}/api/signup`, {
         method: "POST",
         mode: "cors",
         body: JSON.stringify(body),

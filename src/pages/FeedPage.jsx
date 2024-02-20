@@ -24,6 +24,10 @@ export default function FeedPage() {
     content: "",
     image: "", // Asumiendo que manejas la carga de imágenes como un URL por simplicidad
   });
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+
   const handleImageChange = (e) => {
     // Configura para aceptar solo el primer archivo
     setImageFile(e.target.files[0]);
@@ -32,7 +36,7 @@ export default function FeedPage() {
   const { auth } = useAuth();
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/posts", {
+    fetch(`${apiUrl}/api/posts`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -47,7 +51,7 @@ export default function FeedPage() {
   }, [auth.token]);
 
   const openModal = (post) => {
-    fetch(`http://localhost:3000/api/posts/${post._id}`, {
+    fetch(`${apiUrl}/api/posts/${post._id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +75,7 @@ export default function FeedPage() {
   };
 
   function toogleLike(type, postId) {
-    fetch(`http://localhost:3000/api/posts/${postId}/${type}`, {
+    fetch(`${apiUrl}/api/posts/${postId}/${type}`, {
       method: "PATCH",
       mode: "cors",
       body: JSON.stringify({
@@ -122,7 +126,7 @@ export default function FeedPage() {
 
     // Ajusta la petición para enviar FormData
     try {
-      const response = await fetch("http://localhost:3000/api/posts", {
+      const response = await fetch(`${apiUrl}/api/posts`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${auth.token}`,
@@ -201,6 +205,7 @@ export default function FeedPage() {
 
           {isModalOpen && (
             <Modal
+            apiUrl={apiUrl}
               data={data}
               setData={setData}
               inputValue={inputValue}
@@ -263,6 +268,7 @@ export default function FeedPage() {
 }
 
 const Modal = ({
+  apiUrl,
   data,
   setData,
   post,
@@ -280,7 +286,7 @@ const Modal = ({
 
   function onSubmit() {
     if (inputValue.length == 0) return;
-    fetch(`http://localhost:3000/api/posts/${post._id}/comments`, {
+    fetch(`${apiUrl}/api/posts/${post._id}/comments`, {
       method: "POST",
       mode: "cors",
       body: JSON.stringify({
@@ -466,4 +472,5 @@ Modal.propTypes = {
   setInputValue: PropTypes.func.isRequired,
   toogleLike: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
+  apiUrl: PropTypes.string.isRequired
 };

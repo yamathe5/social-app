@@ -6,23 +6,27 @@ export default function FriendsSidebar() {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
 
-  const {auth} = useAuth()
+  const { auth } = useAuth();
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     // Reemplaza 'userId' con el ID real del usuario si es necesario
 
-    
-    const decoded = jwt_decode(auth.token); 
-    const baseUrl = `http://localhost:3000/api/${decoded.id}`;
+    const decoded = jwt_decode(auth.token);
+    const baseUrl = `${apiUrl}/api/${decoded.id}`;
     // Llamada a la API para obtener seguidores
     fetch(`${baseUrl}/followers`)
       .then((response) => response.json())
-      .then((data) => {setFollowers(data); })
+      .then((data) => {
+        setFollowers(data);
+      })
       .catch((error) => console.error("Error fetching followers:", error));
 
     // Llamada a la API para obtener seguidos
     fetch(`${baseUrl}/following`)
       .then((response) => response.json())
-      .then((data) => {setFollowing(data);})
+      .then((data) => {
+        setFollowing(data);
+      })
       .catch((error) => console.error("Error fetching following:", error));
   }, [auth.token]);
 
@@ -32,21 +36,23 @@ export default function FriendsSidebar() {
       <div className="feed__friends-section">
         <h4>Followers</h4>
         <ul className="feed__friends-list">
-          {followers&& followers.slice(0, 5).map((follower, index) => (
-            <li key={index} className="feed__friends-item">
-              {follower.followerId.username}
-            </li>
-          ))}
+          {followers &&
+            followers.slice(0, 5).map((follower, index) => (
+              <li key={index} className="feed__friends-item">
+                {follower.followerId.username}
+              </li>
+            ))}
         </ul>
       </div>
       <div className="feed__friends-section">
         <h4>Following</h4>
         <ul className="feed__friends-list">
-          {following&&following.slice(0, 5).map((follow, index) => (
-            <li key={index} className="feed__friends-item">
-              {follow.followingId.username}
-            </li>
-          ))}
+          {following &&
+            following.slice(0, 5).map((follow, index) => (
+              <li key={index} className="feed__friends-item">
+                {follow.followingId.username}
+              </li>
+            ))}
         </ul>
       </div>
     </aside>

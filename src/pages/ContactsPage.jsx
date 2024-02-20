@@ -12,17 +12,18 @@ export default function ContactsPage() {
   const [followgins,  setFollowgins] = useState(null);
 
   const { auth } = useAuth();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const decoded = jwt_decode(auth.token); 
 
-    fetch(`http://localhost:3000/api/${decoded.id}/followers`)
+    fetch(`${apiUrl}/api/${decoded.id}/followers`)
       .then((data) => data.json())
       .then((data) => {setFollowers(data); });
-    fetch(`http://localhost:3000/api/${decoded.id}/following`)
+    fetch(`${apiUrl}/api/${decoded.id}/following`)
       .then((data) => data.json())
       .then((data) => {setFollowgins(data); });
-  }, [auth.token]);
+  }, [apiUrl, auth.token]);
 
   return (
     <div className="feed">
