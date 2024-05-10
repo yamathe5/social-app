@@ -13,27 +13,34 @@
   color: white;
   border-bottom: 1px solid rgb(245, 245, 245);
 }
+
 .feed__logo {
   width: 4rem;
   height: 4rem;
+  flex: 1;
 }
+
 .feed__logo-image {
   width: 4rem;
   height: 4rem;
 }
 .feed__main {
-  display: flex;
-  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr); /* Crea 12 columnas de igual tamaño */
+  grid-template-rows: repeat(12, 1fr); /* Crea 12 columnas de igual tamaño */
   background-color: #f8f9fa;
 }
+
 
 .feed__sidebar {
   background-color: white;
   padding: 1rem;
-  min-width: 32rem; /* Ajusta según necesidad */
+  /* min-width: 32rem; Ajusta según necesidad */
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  grid-column: 1 / 4;
+  grid-row: 1 / 13;
 }
 .feed__button {
   border-radius: 0.8rem;
@@ -48,7 +55,9 @@
   align-items: center; /* Alinea verticalmente el icono y el texto */
   gap: 10px;
   padding: 0.4rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.4rem;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
 }
 
 .feed__icon {
@@ -57,12 +66,19 @@
 }
 .feed__button:hover {
   color: #007bff;
+  background: #ececec;
+}
+.feed__button.active {
+  color: #007bff;
+  background-color: #ececec;
 }
 
 .feed__friends {
   background-color: white;
   padding: 1rem;
-  min-width: 32rem; /* Ajusta según necesidad */
+  /* min-width: 32rem; Ajusta según necesidad */
+  grid-column: 10 / 13;
+  grid-row: 1 / 13;
 }
 .feed__friends h3 {
   color: #343a40;
@@ -88,7 +104,8 @@
 .feed__posts {
   flex-grow: 1;
   margin: 0rem 4rem;
-  overflow-y: auto; /* Para el scroll de posts */
+  overflow-y: auto; 
+  
   display: flex;
   padding-top: 1.6rem;
   flex-direction: column;
@@ -96,14 +113,19 @@
   border-radius: 1.2rem;
 
   background-color: white;
+  grid-column: 5 / 10;
+  grid-row: 1 / 13;
+
+
+
 }
 
 .post {
   /* background-color: white; */
   width: 90%;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  padding: 2rem;
+  box-shadow: 7px 7px 4px rgba(0, 0, 0, 0.1);
   border-radius: 0.8rem;
   background-color: #f8f9fa;
 }
@@ -142,11 +164,20 @@
   border-radius: 0.8rem;
   color: #343a40;
   border: none;
-  padding: 0.8rem 2.2rem;
   width: 100%;
   cursor: pointer;
   background-color: transparent;
-  /* background-color: red; */
+  overflow: visible;
+  transition: all 0.3s;
+  padding: 0.8rem 1.5rem;
+  margin: 0.5em;
+  transition: all 0.3s ease-in-out;
+}
+
+.post__button:hover {
+  transform: scale(1.1);
+  padding: 0.9rem 1.6rem;
+  color: #0069da;
 }
 
 .post__button--liked {
@@ -346,3 +377,11 @@
   background-color: #0056b3;
 }
 
+@media (max-width: 768px) {
+  .feed__posts{
+
+    grid-column: 2 / 12;
+    grid-row: 1 / 13;
+    background-color: red;
+  }
+}

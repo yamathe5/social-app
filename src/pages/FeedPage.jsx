@@ -1,16 +1,16 @@
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
-
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./FeedPage.css";
-import { useEffect } from "react";
 import Logo from "../assets/logo.jpg";
 import { useAuth } from "../contexts/auth";
 import Sidebar from "../components/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import FriendsSidebar from "../components/FriendsSidebar";
+import MobileSidebar from "../components/MobileSidebar";
+import { Link } from "react-router-dom";
 
 export default function FeedPage() {
   const [data, setData] = useState(null);
@@ -20,13 +20,11 @@ export default function FeedPage() {
   const [imageFile, setImageFile] = useState(null);
 
   const [newPost, setNewPost] = useState({
-    title: "",
     content: "",
     image: "", // Asumiendo que manejas la carga de imágenes como un URL por simplicidad
   });
 
   const apiUrl = import.meta.env.VITE_API_URL;
-
 
   const handleImageChange = (e) => {
     // Configura para aceptar solo el primer archivo
@@ -36,19 +34,21 @@ export default function FeedPage() {
   const { auth } = useAuth();
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/posts`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${auth.token}`,
-      },
-    })
-      .then((resp) => resp.json())
-      .then((resp) => {
-        setData(resp);
+    if (auth?.user?._id) {
+      fetch(`${apiUrl}/api/posts`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
       })
-      .catch((error) => console.error("Error al cargar los posts:", error));
-  }, [auth.token]);
+        .then((resp) => resp.json())
+        .then((resp) => {
+          setData(resp);
+        })
+        .catch((error) => console.error("Error al cargar los posts:", error));
+    }
+  }, [apiUrl, auth.token, auth.user]);
 
   const openModal = (post) => {
     fetch(`${apiUrl}/api/posts/${post._id}`, {
@@ -62,7 +62,7 @@ export default function FeedPage() {
       .then((res) => {
         setSelectedPost(res);
         setIsModalOpen(true);
-        toggleBodyScroll(true); // Desactivar scroll
+        toggleBodyScroll(true);
       });
   };
 
@@ -74,7 +74,7 @@ export default function FeedPage() {
     }
   };
 
-  function toogleLike(type, postId) {
+  function toggleLike(type, postId) {
     fetch(`${apiUrl}/api/posts/${postId}/${type}`, {
       method: "PATCH",
       mode: "cors",
@@ -114,40 +114,39 @@ export default function FeedPage() {
 
   const handleNewPostSubmit = async (e) => {
     e.preventDefault();
-
-    // Crea un FormData para enviar los datos del post, incluyendo la imagen
-    const formData = new FormData();
-    formData.append("title", newPost.title);
-    formData.append("content", newPost.content);
-    formData.append("user", auth.user._id); // Asegúrate de que este sea el campo correcto esperado en tu backend
-    if (imageFile) {
-      formData.append("image", imageFile); // 'image' es el nombre del campo que tu backend espera para el archivo
+    if (!newPost.content.trim()) {
+      alert("El contenido del post es obligatorio.");
+      return;
     }
 
-    // Ajusta la petición para enviar FormData
+    const formData = new FormData();
+    formData.append("content", newPost.content);
+    formData.append("user", auth.user._id);
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     try {
       const response = await fetch(`${apiUrl}/api/posts`, {
         method: "POST",
+        body: formData,
         headers: {
           Authorization: `Bearer ${auth.token}`,
-          // No establezcas el 'Content-Type' cuando envías FormData
-          // 'Content-Type': 'multipart/form-data', // Esto se establecerá automáticamente
         },
-        body: formData,
       });
       const newPostResponse = await response.json();
       if (response.ok) {
         setData((prevPosts) => [newPostResponse, ...prevPosts]);
-        setNewPost({ title: "", content: "", image: "" }); // Resetear el formulario
+        setNewPost({ user: "", content: "", image: "" });
       } else {
         console.error("Error al publicar el post:", newPostResponse.message);
       }
-      // El resto del manejo de la respuesta es igual
-      // ...
     } catch (error) {
       console.error("Error al publicar el post:", error);
     }
   };
+
+  if (!auth?.user) return null;
 
   return (
     <div className="feed">
@@ -155,34 +154,26 @@ export default function FeedPage() {
         <div className="feed__logo">
           <img className="feed__logo-image" src={Logo} alt="" />
         </div>
-        <div className="feed__welcome-message">Bienvenido a social app</div>
+        <div className="feed__welcome-message">Bienvenido</div>
         <nav className="feed__user-settings">
-          <a href="/settings" className="feed__link">
+          {/* <a href="/settings" className="feed__link">
             Configuraciones
-          </a>
-          <a href="/profile" className="feed__link">
+          </a> */}
+          <Link to={`/user/${auth.user._id}`} className="feed__link">
             Usuario
-          </a>
+          </Link>
         </nav>
       </header>
 
       <main className="feed__main">
-        <Sidebar></Sidebar>
+        <Sidebar />
+        <MobileSidebar />
         <section className="feed__posts">
           <form
             className="new-post-form"
             onSubmit={handleNewPostSubmit}
             encType="multipart/form-data"
           >
-            <input
-              className="new-post-form__title"
-              type="text"
-              name="title"
-              value={newPost.title}
-              onChange={handleInputChange}
-              placeholder="Título del post"
-              required
-            />
             <textarea
               className="new-post-form__content"
               name="content"
@@ -205,7 +196,7 @@ export default function FeedPage() {
 
           {isModalOpen && (
             <Modal
-            apiUrl={apiUrl}
+              apiUrl={apiUrl}
               data={data}
               setData={setData}
               inputValue={inputValue}
@@ -217,7 +208,7 @@ export default function FeedPage() {
                 setIsModalOpen(false);
                 toggleBodyScroll(false);
               }}
-              toogleLike={toogleLike}
+              toggleLike={toggleLike}
             />
           )}
 
@@ -239,21 +230,23 @@ export default function FeedPage() {
                   {item.hasLiked ? (
                     <button
                       className="post__button post__button--liked"
-                      onClick={() => toogleLike("unlike", item._id)}
+                      onClick={() => toggleLike("unlike", item._id)}
                     >
                       Me gusta
                     </button>
                   ) : (
                     <button
                       className="post__button"
-                      onClick={() => toogleLike("like", item._id)}
+                      onClick={() => toggleLike("like", item._id)}
                     >
                       Me gusta
                     </button>
                   )}
                   <button
                     className="post__button"
-                    onClick={() => openModal(item)}
+                    onClick={() => {
+                      openModal(item);
+                    }}
                   >
                     Comentarios
                   </button>
@@ -261,7 +254,7 @@ export default function FeedPage() {
               </article>
             ))}
         </section>
-        <FriendsSidebar></FriendsSidebar>
+        <FriendsSidebar />
       </main>
     </div>
   );
@@ -277,15 +270,17 @@ const Modal = ({
   setSelectedPost,
   inputValue,
   setInputValue,
-  toogleLike,
+  toggleLike,
 }) => {
   if (!post) return null;
+
   function handleChangeInput(e) {
     setInputValue(e.target.value);
   }
 
   function onSubmit() {
-    if (inputValue.length == 0) return;
+    if (inputValue.length === 0) return;
+
     fetch(`${apiUrl}/api/posts/${post._id}/comments`, {
       method: "POST",
       mode: "cors",
@@ -314,13 +309,13 @@ const Modal = ({
 
         // Actualiza el estado global de los posts
         setData(updatedPosts);
-
         setInputValue("");
       })
       .catch((error) =>
         console.error("Error al agregar el comentario:", error)
       );
   }
+
   return (
     <div className="modal-backdrop">
       <div className="modal">
@@ -369,14 +364,14 @@ const Modal = ({
             {post.hasLiked ? (
               <button
                 className="post__button post__button--liked"
-                onClick={() => toogleLike("unlike", post._id)}
+                onClick={() => toggleLike("unlike", post._id)}
               >
                 Me gusta
               </button>
             ) : (
               <button
                 className="post__button"
-                onClick={() => toogleLike("like", post._id)}
+                onClick={() => toggleLike("like", post._id)}
               >
                 Me gusta
               </button>
@@ -409,7 +404,6 @@ const Modal = ({
 Modal.propTypes = {
   post: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
     hasLiked: PropTypes.bool.isRequired,
     image: PropTypes.string,
@@ -418,11 +412,8 @@ Modal.propTypes = {
     user: PropTypes.shape({
       username: PropTypes.string.isRequired,
     }).isRequired,
-    likes: PropTypes.arrayOf(
-      PropTypes.shape({
-        username: PropTypes.string.isRequired,
-      }).isRequired
-    ).isRequired,
+    likes: PropTypes.arrayOf(PropTypes.string.isRequired),
+
     comments: PropTypes.arrayOf(
       PropTypes.shape({
         _id: PropTypes.string.isRequired,
@@ -438,7 +429,6 @@ Modal.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
-      title: PropTypes.string,
       content: PropTypes.string.isRequired,
       hasLiked: PropTypes.bool.isRequired,
       image: PropTypes.string,
@@ -472,5 +462,5 @@ Modal.propTypes = {
   setInputValue: PropTypes.func.isRequired,
   toogleLike: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
-  apiUrl: PropTypes.string.isRequired
+  apiUrl: PropTypes.string.isRequired,
 };
