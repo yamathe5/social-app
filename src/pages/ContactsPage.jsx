@@ -234,8 +234,9 @@ export default function ContactsPage() {
           <div className="contacts__grid">
             {receivedRequests.length > 0 ? (
               <div className="contacts__grid">
-                {receivedRequests.map((request, index) => (
-                  <div key={index} className="contact__card">
+                {receivedRequests.map((request, index) => 
+                  {
+                    return <div key={index} className="contact__card">
                     <img
                       src={
                         request.senderId.profilePicture ||
@@ -263,8 +264,8 @@ export default function ContactsPage() {
                     >
                       Rechazar
                     </button>
-                  </div>
-                ))}
+                  </div>}
+                )}
               </div>
             ) : (
               <div className="no-requests">Sin solicitudes</div>
