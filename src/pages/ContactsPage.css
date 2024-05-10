@@ -1,0 +1,115 @@
+
+
+.feed__posts {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.section__header {
+  text-align: left;
+  align-self: self-start;
+}
+
+.section__title {
+  font-size: 24px; /* Aumento del tamaño de la fuente */
+  color: #333;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.contacts__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Ajusta el tamaño mínimo para más espacio */
+  gap: 20px;
+  padding: 10px 20px 20px 20px;
+}
+
+.contact__card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  background-color: white; 
+}
+
+.contact__card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.contact__image {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.contact__name {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Estilos adicionales para mejorar la visualización */
+.contact__card:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+.contact__card p{
+  font-size: 1.2rem;
+}
+
+.button {
+  padding: 8px 16px;
+  margin-top: 5px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5em;
+  transition: background-color 0.3s; 
+}
+
+.accept {
+  background-color: #4CAF50;
+}
+
+.accept:hover {
+  background-color: #367c39; /* Un verde más oscuro al pasar el mouse */
+}
+
+.reject {
+  background-color: #f44336;
+}
+.remove{
+  
+  background-color: #f44336;
+}
+.cancel{
+  
+  background-color: #f44336;
+}
+
+.reject:hover {
+  background-color: #c7321c; /* Un rojo más oscuro al pasar el mouse */
+}
+
+.contact__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.no-contacts, .no-requests {
+  color: #5f5f5f;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
