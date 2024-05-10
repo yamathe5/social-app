@@ -1,0 +1,20 @@
+.feed__sidebar {
+    display: block;
+}
+
+.mobile-visible {
+    display: block; 
+}
+
+
+
+@media (max-width: 768px) {
+    /* .feed__sidebar {
+        display: none;
+    } */
+
+    .mobile-visible {
+        display: block;
+    }
+    
+}
