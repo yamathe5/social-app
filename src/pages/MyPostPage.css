@@ -16,24 +16,30 @@
 .feed__logo {
   width: 4rem;
   height: 4rem;
+  flex: 1;
+
 }
 .feed__logo-image {
   width: 4rem;
   height: 4rem;
 }
 .feed__main {
-  display: flex;
-  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr); /* Crea 12 columnas de igual tamaño */
+  grid-template-rows: repeat(12, 1fr); /* Crea 12 columnas de igual tamaño */
   background-color: #f8f9fa;
 }
 
 .feed__sidebar {
   background-color: white;
   padding: 1rem;
-  min-width: 32rem; /* Ajusta según necesidad */
+  /* min-width: 32rem; Ajusta según necesidad */
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  grid-column: 1 / 4;
+  grid-row: 1 / 13;
+
 }
 .feed__button {
   border-radius: 0.8rem;
@@ -48,7 +54,10 @@
   align-items: center; /* Alinea verticalmente el icono y el texto */
   gap: 10px;
   padding: 0.4rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.4rem;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+
 }
 
 .feed__icon {
@@ -57,12 +66,18 @@
 }
 .feed__button:hover {
   color: #007bff;
+  background: #ececec;
+
+}
+.feed__button.active {
+  color: #007bff;
+  background-color: #ececec;
 }
 
 .feed__friends {
   background-color: white;
   padding: 1rem;
-  min-width: 32rem; /* Ajusta según necesidad */
+  /* min-width: 32rem; Ajusta según necesidad */
 }
 .feed__friends h3 {
   color: #343a40;
@@ -96,14 +111,17 @@
   border-radius: 1.2rem;
 
   background-color: white;
+  grid-column: 4 / 10;
+  grid-row: 1 / 13;
+
 }
 
 .post {
   /* background-color: white; */
   width: 90%;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  padding: 2rem 2rem 0 2rem;
+  box-shadow: 7px 7px 4px rgba(0, 0, 0, 0.1);
   border-radius: 0.8rem;
   background-color: #f8f9fa;
 }
@@ -128,22 +146,23 @@
   border-top: 0.5px solid #d9d9d9;
   border-bottom: 0.5px solid #d9d9d9;
   padding: 0.8rem 0rem;
-}
+  /* background-color: #fff; */
+}/*
 .post__button {
   font-size: 1.6rem;
   border-radius: 0.8rem;
   color: #343a40;
   border: none;
-  padding: 0.8rem 2.2rem;
+  padding: 0.8rem 1.5rem;
   width: 100%;
   cursor: pointer;
   background-color: transparent;
   /* background-color: red; */
-}
+/*}
 
 .post__button--liked {
   color: #007bff;
-}
+}*/
 .user__settings a {
   color: white;
   text-decoration: none;
@@ -175,4 +194,22 @@
   border-radius: 8px;
   max-width: 52rem;
   width: 100%;
+}
+@media (max-width: 768px) {
+
+  .post__buttons{
+    font-size: 1.4rem;
+  }
+  .post__button{
+    font-size: 1.4rem;
+  }
+  .feed__posts{
+
+    grid-column: 1 / 13;
+    grid-row: 1 / 13;
+    /* background-color: red; */
+  }
+}
+@media (max-width: 768px) {
+  
 }

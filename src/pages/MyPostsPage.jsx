@@ -1,45 +1,87 @@
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
-
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./MyPostPage.css";
-import { useEffect } from "react";
 import Logo from "../assets/logo.jpg";
-import { jwtDecode as jwt_decode } from "jwt-decode";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-
 import { useAuth } from "../contexts/auth";
 import Sidebar from "../components/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FriendsSidebar from "../components/FriendsSidebar";
+import MobileSidebar from "../components/MobileSidebar";
+import { Link } from "react-router-dom";
+
 export default function MyPostPage() {
   const [data, setData] = useState(null);
+  const [inputValue, setInputValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-  const { auth } = useAuth();
-  const [inputValue, setInputValue] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [newPost, setNewPost] = useState({
+    content: "",
+    image: "",
+  });
 
-  
+  const { auth } = useAuth();
   const apiUrl = import.meta.env.VITE_API_URL;
+
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
   useEffect(() => {
-    const decoded = jwt_decode(auth.token);
-    fetch(`${apiUrl}/api/user/${decoded.id}/posts`, {
+    const fetchUserPosts = async () => {
+      if (auth?.user?._id) {
+        try {
+          const response = await fetch(`${apiUrl}/api/user/${auth.user._id}/posts`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${auth.token}`,
+            },
+          });
+
+          if (response.ok) {
+            const posts = await response.json();
+            setData(posts);
+          } else {
+            console.error("Error al cargar los posts del usuario:", await response.json());
+          }
+        } catch (error) {
+          console.error("Error al cargar los posts del usuario:", error);
+        }
+      }
+    };
+
+    fetchUserPosts();
+  }, [apiUrl, auth, auth.token]);
+
+  const openModal = (post) => {
+    fetch(`${apiUrl}/api/posts/${post._id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${auth.token}`,
       },
     })
-      .then((resp) => resp.json())
-      .then((resp) => {
-        setData(resp);
-      })
-      .catch((error) => console.error("Error al cargar los posts:", error));
-  }, [apiUrl, auth.token]);
+      .then((res) => res.json())
+      .then((res) => {
+        setSelectedPost(res);
+        setIsModalOpen(true);
+        toggleBodyScroll(true);
+      });
+  };
 
-  function toogleLike(type, postId) {
+  const toggleBodyScroll = (isOpen) => {
+    if (isOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+  };
 
+  function toggleLike(type, postId) {
     fetch(`${apiUrl}/api/posts/${postId}/${type}`, {
       method: "PATCH",
       mode: "cors",
@@ -68,16 +110,49 @@ export default function MyPostPage() {
           }
           return post;
         });
-
         setData(updatedPosts);
-      })
-      .catch((err) => console.log(err));
+      });
   }
 
-  const openModal = (post) => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewPost({ ...newPost, [name]: value });
   };
+
+  const handleNewPostSubmit = async (e) => {
+    e.preventDefault();
+    if (!newPost.content.trim()) {
+      alert("El contenido del post es obligatorio.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("content", newPost.content);
+    formData.append("user", auth.user._id);
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
+    try {
+      const response = await fetch(`${apiUrl}/api/posts`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+      const newPostResponse = await response.json();
+      if (response.ok) {
+        setData((prevPosts) => [newPostResponse, ...prevPosts]);
+        setNewPost({ user: "", content: "", image: "" });
+      } else {
+        console.error("Error al publicar el post:", newPostResponse.message);
+      }
+    } catch (error) {
+      console.error("Error al publicar el post:", error);
+    }
+  };
+  if (!auth?.user) return null;
 
   return (
     <div className="feed">
@@ -85,34 +160,61 @@ export default function MyPostPage() {
         <div className="feed__logo">
           <img className="feed__logo-image" src={Logo} alt="" />
         </div>
-        <div className="feed__welcome-message">
-          Bienvenido a social appaaaaaa
-        </div>
+        <div className="feed__welcome-message">Bienvenido</div>
         <nav className="feed__user-settings">
-          <a href="/settings" className="feed__link">
+          {/* <a href="/settings" className="feed__link">
             Configuraciones
-          </a>
-          <a href="/profile" className="feed__link">
+          </a> */}
+          <Link to={`/user/${auth.user._id}`} className="feed__link">
             Usuario
-          </a>
+          </Link>
         </nav>
       </header>
-      <main className="feed__main">
-        <Sidebar></Sidebar>
 
+      <main className="feed__main">
+        <Sidebar />
+        <MobileSidebar />
         <section className="feed__posts">
+          <form
+            className="new-post-form"
+            onSubmit={handleNewPostSubmit}
+            encType="multipart/form-data"
+          >
+            <textarea
+              className="new-post-form__content"
+              name="content"
+              value={newPost.content}
+              onChange={handleInputChange}
+              placeholder="Contenido del post"
+              required
+            ></textarea>
+            <input
+              className="new-post-form__image"
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/*"
+            />
+            <button type="submit" className="new-post-form__submit">
+              Publicar
+            </button>
+          </form>
+
           {isModalOpen && (
             <Modal
-            apiUrl={apiUrl}
+              apiUrl={apiUrl}
               data={data}
               setData={setData}
-              toogleLike={toogleLike}
               inputValue={inputValue}
               setInputValue={setInputValue}
               post={selectedPost}
               auth={auth}
               setSelectedPost={setSelectedPost}
-              onClose={() => setIsModalOpen(false)}
+              onClose={() => {
+                setIsModalOpen(false);
+                toggleBodyScroll(false);
+              }}
+              toggleLike={toggleLike}
             />
           )}
 
@@ -120,7 +222,6 @@ export default function MyPostPage() {
             data.map((item, index) => (
               <article className="post" key={index}>
                 <h2 className="post__username">{item.user.username}</h2>
-
                 <p className="post__content">{item.content}</p>
                 <img className="post__image" src={item.signedImageUrl} alt="" />
                 <div className="post__stadistics">
@@ -135,21 +236,23 @@ export default function MyPostPage() {
                   {item.hasLiked ? (
                     <button
                       className="post__button post__button--liked"
-                      onClick={() => toogleLike("unlike", item._id)}
+                      onClick={() => toggleLike("unlike", item._id)}
                     >
                       Me gusta
                     </button>
                   ) : (
                     <button
                       className="post__button"
-                      onClick={() => toogleLike("like", item._id)}
+                      onClick={() => toggleLike("like", item._id)}
                     >
                       Me gusta
                     </button>
                   )}
                   <button
                     className="post__button"
-                    onClick={() => openModal(item)}
+                    onClick={() => {
+                      openModal(item);
+                    }}
                   >
                     Comentarios
                   </button>
@@ -157,7 +260,7 @@ export default function MyPostPage() {
               </article>
             ))}
         </section>
-        <FriendsSidebar></FriendsSidebar>
+        <FriendsSidebar />
       </main>
     </div>
   );
@@ -165,15 +268,15 @@ export default function MyPostPage() {
 
 const Modal = ({
   apiUrl,
-  setData,
   data,
+  setData,
   post,
   onClose,
   auth,
   setSelectedPost,
   inputValue,
   setInputValue,
-  toogleLike,
+  toggleLike,
 }) => {
   if (!post) return null;
 
@@ -203,15 +306,14 @@ const Modal = ({
         };
         setSelectedPost(updatedSelectedPost);
 
-        // Actualiza la lista global de posts
-        const updatedPosts = data.map((item) => {
-          if (item._id === post._id) {
+        const updatedPosts = data.map((postItem) => {
+          if (postItem._id === post._id) {
             return updatedSelectedPost;
           }
-          return item;
+          return postItem;
         });
-        setData(updatedPosts);
 
+        setData(updatedPosts);
         setInputValue("");
       })
       .catch((error) =>
@@ -230,7 +332,7 @@ const Modal = ({
               className="modal-close-icon"
               onClick={onClose}
             />
-          </div>{" "}
+          </div>
           <p className="post__content">{post.content}</p>
           {post.signedImageUrl && (
             <img className="post__image" src={post.signedImageUrl} alt="Post" />
@@ -262,26 +364,28 @@ const Modal = ({
                 </div>
               ))}
           </div>
+
           <div className="post__buttons">
             {post.hasLiked ? (
               <button
                 className="post__button post__button--liked"
-                onClick={() => toogleLike("unlike", post._id)}
+                onClick={() => toggleLike("unlike", post._id)}
               >
                 Me gusta
               </button>
             ) : (
               <button
                 className="post__button"
-                onClick={() => toogleLike("like", post._id)}
+                onClick={() => toggleLike("like", post._id)}
               >
                 Me gusta
               </button>
-            )}{" "}
+            )}
             <button className="post__button" onClick={onClose}>
               Cerrar
             </button>
           </div>
+
           <div className="input__box">
             <input
               className="input__box__comment"
@@ -294,7 +398,7 @@ const Modal = ({
               className="input__box__send-button"
               onClick={() => onSubmit()}
             >
-              Envia
+              Enviar
             </button>
           </div>
         </article>
@@ -302,19 +406,17 @@ const Modal = ({
     </div>
   );
 };
+
 Modal.propTypes = {
   post: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    hasLiked: PropTypes.bool.isRequired,
-
     content: PropTypes.string.isRequired,
-    image: PropTypes.string,
+    hasLiked: PropTypes.bool.isRequired,
     signedImageUrl: PropTypes.string,
     user: PropTypes.shape({
       username: PropTypes.string.isRequired,
     }).isRequired,
-    likes: PropTypes.arrayOf(PropTypes.string),
+    likes: PropTypes.arrayOf(PropTypes.string.isRequired),
     comments: PropTypes.arrayOf(
       PropTypes.shape({
         _id: PropTypes.string.isRequired,
@@ -327,19 +429,11 @@ Modal.propTypes = {
     createdAt: PropTypes.string.isRequired,
     updatedAt: PropTypes.string.isRequired,
   }),
-  auth: PropTypes.shape({
-    token: PropTypes.string.isRequired,
-    user: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-    }),
-  }),
   data: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
-      title: PropTypes.string,
       content: PropTypes.string.isRequired,
       hasLiked: PropTypes.bool.isRequired,
-      image: PropTypes.string,
       user: PropTypes.shape({
         username: PropTypes.string.isRequired,
       }),
@@ -357,11 +451,17 @@ Modal.propTypes = {
       updatedAt: PropTypes.string.isRequired,
     })
   ).isRequired,
+  auth: PropTypes.shape({
+    token: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+    }),
+  }),
   setData: PropTypes.func.isRequired,
   apiUrl: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   setSelectedPost: PropTypes.func.isRequired,
   inputValue: PropTypes.string.isRequired,
   setInputValue: PropTypes.func.isRequired,
-  toogleLike: PropTypes.func.isRequired,
+  toggleLike: PropTypes.func.isRequired,
 };
