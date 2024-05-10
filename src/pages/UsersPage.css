@@ -1,0 +1,195 @@
+
+.users__grid {
+  width: 100%;
+  display: grid;
+  /* grid-template-columns: repeat(3, 1fr); */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.user__card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.user__card:hover {
+  transform: scale(1.05);
+}
+
+
+.user__image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user__name {
+  margin-top: 10px;
+  font-size: 1.6rem;
+  text-decoration: none;
+  color: #333333;
+  text-decoration: dotted;
+  border: none;
+}
+
+.user__bio {
+  font-size: 0.8rem;
+  color: gray;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.hamburger-button {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #333;    cursor: pointer;
+
+}
+
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 150;
+  position: fixed;
+    top: 50;
+    left: 0;
+    transform: translateX(-100%);
+    width: 250px;
+    height: 100%;
+    background-color: white;
+    transition: transform 0.3s ease-out; 
+    z-index: 150;
+    display: flex;
+    flex-direction: column; 
+}
+
+.feed__posts {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.feed__posts h2 {
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+
+.suggestions {
+  position: absolute;
+  border: 1px solid #ccc;
+  border-top: none;
+  top: 100%; /* Posiciona justo debajo del input */
+  list-style: none;
+  padding: 0;
+  margin-top: -20px; /*esto no me gusta pero bueno, es para ajustar las sugerencias justo debajo del input*/
+  width: 100%;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s; 
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+
+.suggestion-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+@media (max-width: 1113px) {
+  .user__card {
+    padding: 20px;
+}
+
+.user__image {
+    width: 150px;
+    height: 150px;
+}
+
+.user__name {
+    font-size: 1.8rem; 
+}
+
+.user__bio {
+    font-size: 1.3rem;
+}
+
+.users__grid {
+  grid-template-columns: 1fr; 
+  gap: 40px;
+  margin: auto auto;
+}
+}
+
+@media (max-width: 768px) {
+  .feed__logo-image {
+      display: none;
+  }
+
+  .hamburger-button {
+      display: block;    cursor: pointer;
+
+  }
+
+  /* .feed__sidebar {
+      display: none;
+  } */
+  .friends__bar {
+      display: none; 
+  }
+  .user__image {
+    width: 100px;
+    height: 100px;
+}
+}
+.user__card:hover {
+  box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+}
+
+
+
