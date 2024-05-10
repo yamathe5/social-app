@@ -7,16 +7,15 @@ import {
 import PropTypes from "prop-types";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import FeedPage from "./pages/FeedPage"; 
-import { useAuth } from "./contexts/auth";
+import FeedPage from "./pages/FeedPage";
 import MyPostPage from "./pages/MyPostsPage";
 import ContactsPage from "./pages/ContactsPage";
 import UsersPage from "./pages/UsersPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import { useAuth } from "./contexts/auth";
 
 function App() {
   const { auth } = useAuth();
-
 
   return (
     <Router>
@@ -37,9 +36,7 @@ function App() {
         />
         <Route
           path="/feed"
-          element={
-            <ProtectedRoute redirectTo="/login" element={<FeedPage />} />
-          }
+          element={<ProtectedRoute redirectTo="/login" element={<FeedPage />} />}
         />
         <Route
           path="/contacts"
@@ -53,21 +50,25 @@ function App() {
             <ProtectedRoute redirectTo="/login" element={<UsersPage />} />
           }
         />
-                <Route path="/user/:userId" element={<UserProfilePage />} />
-
-        {/* <Route path="/" element={<Navigate to="/feed" replace />} /> */}
-        <Route path="/" element={<Navigate to={auth.token ? "/feed" : "/login"} replace />} />
-        <Route path="*" element={<Navigate to={auth.token ? "/feed" : "/login"} replace />} />
-
+        <Route
+          path="/user/:userId"
+          element={<ProtectedRoute redirectTo="/login" element={<UserProfilePage />} />}
+        />
+        <Route
+          path="/"
+          element={<Navigate to={auth.token ? "/feed" : "/login"} replace />}
+        />
+        <Route
+          path="*"
+          element={<Navigate to={auth.token ? "/feed" : "/login"} replace />}
+        />
       </Routes>
     </Router>
   );
 }
 
-
 function PublicRoute({ redirectTo, element }) {
   const { auth } = useAuth();
-
   return !auth.token ? element : <Navigate to={redirectTo} replace />;
 }
 
@@ -75,6 +76,7 @@ PublicRoute.propTypes = {
   element: PropTypes.element.isRequired,
   redirectTo: PropTypes.string.isRequired,
 };
+
 function ProtectedRoute({ redirectTo, element }) {
   const { auth } = useAuth();
   return auth.token ? element : <Navigate to={redirectTo} replace />;
@@ -84,6 +86,5 @@ ProtectedRoute.propTypes = {
   element: PropTypes.element.isRequired,
   redirectTo: PropTypes.string.isRequired,
 };
-
 
 export default App;

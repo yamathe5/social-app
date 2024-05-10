@@ -4,12 +4,21 @@ import PropTypes from "prop-types";
 
 const AuthContext = createContext(null);
 
+const isTokenValid = (token) => {
+  try {
+    const decoded = jwt_decode(token);
+    return decoded.exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [auth, setAuth] = useState({
     user: null,
-    token: localStorage.getItem("authToken") || null,
+    token: localStorage.getItem("authToken"),
   });
 
   const fetchUserProfile = async (_id, token) => {
@@ -35,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       const response = await fetch(`${apiUrl}/api/login`, {
         method: "POST",
         mode: "cors",
-        body: JSON.stringify({ email: email, password: password }),
+        body: JSON.stringify({ email, password }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -44,7 +53,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       if (response.ok) {
         const { _id, token } = data;
-        setAuth({ token });
+        setAuth({ user: null, token });
         localStorage.setItem("authToken", token);
         fetchUserProfile(_id, token);
       } else {
@@ -62,15 +71,14 @@ export const AuthProvider = ({ children }) => {
         mode: "cors",
         body: JSON.stringify(body),
         headers: {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
         },
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        const _id = data.user.id;
-        const token = data.user.token;
+        const { _id, token } = data.user;
         setAuth({ user: data.user, token });
         localStorage.setItem("authToken", token);
         fetchUserProfile(_id, token);
@@ -87,13 +95,19 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("authToken");
   };
 
-  useEffect(() => {
+  const refreshAuth = async () => {
     const storedToken = localStorage.getItem("authToken");
-    if (storedToken) {
+    if (storedToken && isTokenValid(storedToken)) {
       setAuth((prevAuth) => ({ ...prevAuth, token: storedToken }));
       const decoded = jwt_decode(storedToken);
       fetchUserProfile(decoded.id, storedToken);
+    } else {
+      logout();
     }
+  };
+
+  useEffect(() => {
+    refreshAuth();
   }, []);
 
   const value = {
