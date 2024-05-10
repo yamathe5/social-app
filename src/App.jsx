@@ -11,6 +11,8 @@ import FeedPage from "./pages/FeedPage";
 import { useAuth } from "./contexts/auth";
 import MyPostPage from "./pages/MyPostsPage";
 import ContactsPage from "./pages/ContactsPage";
+import UsersPage from "./pages/UsersPage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 function App() {
   const { auth } = useAuth();
@@ -45,7 +47,14 @@ function App() {
             <ProtectedRoute redirectTo="/login" element={<ContactsPage />} />
           }
         />
-        
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute redirectTo="/login" element={<UsersPage />} />
+          }
+        />
+                <Route path="/user/:userId" element={<UserProfilePage />} />
+
         {/* <Route path="/" element={<Navigate to="/feed" replace />} /> */}
         <Route path="/" element={<Navigate to={auth.token ? "/feed" : "/login"} replace />} />
         <Route path="*" element={<Navigate to={auth.token ? "/feed" : "/login"} replace />} />
