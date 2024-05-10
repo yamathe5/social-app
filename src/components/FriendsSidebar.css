@@ -1,0 +1,6 @@
+
+@media (max-width: 768px) {
+.feed__friends{
+    display: none;
+}
+}
